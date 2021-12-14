@@ -8,7 +8,7 @@ extend lang::std::Id;
  */
 
 start syntax Form
-	= "form" Id "{" Question "}";
+	= "form" Id "{" Question* "}";
 
 // TODO: question, computed question, block, if-then-else, if-then
 syntax Question
@@ -25,8 +25,9 @@ syntax Expr
 	= Id \ "true" \ "false" // true/false are reserved keywords.
 	| Int
 	| Bool
+	| Str
 	| bracket "(" Expr ")"
-	| Expr "!" Expr
+	| "!" Expr
 	> left Expr "*" Expr
 	| left Expr "/" Expr
 	> left Expr "+" Expr
@@ -42,13 +43,15 @@ syntax Expr
 
 syntax Type
 	= "integer"
-	| "boolean";
+	| "boolean"
+	| "string";
 
 lexical Str
 	= @category="StringLiteral"  [\"] ![\"]* [\"];
 
 lexical Int
-	= ^[\-]? [0..9]+ $;
+	= [\-]? [1..9][0..9]+
+	| [0];
 
 lexical Bool
     = "true"
