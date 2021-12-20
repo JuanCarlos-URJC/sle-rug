@@ -26,8 +26,8 @@ syntax Expr
 	| Int
 	| Bool
 	| Str
-	| bracket "(" Expr ")"
-	| "!" Expr
+	> bracket "(" Expr ")"
+	> right "!" Expr
 	> left Expr "*" Expr
 	| left Expr "/" Expr
 	> left Expr "+" Expr
