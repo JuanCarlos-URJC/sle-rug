@@ -28,10 +28,10 @@ AQuestion cst2ast(Question q) {
 			return question("<l>", id("<i>", src=i@\loc), cst2ast(t), src=q@\loc);
 		case (Question)`<Str l> <Id i> : <Type t> = <Expr e>`: 
 			return computed("<l>", id("<i>", src=i@\loc), cst2ast(t), cst2ast(e), src=q@\loc);
-		case (Question)`if (<Id i>) {<Question* qs>}`: 
-			return ifBlock(id("<i>", src=i@\loc), [cst2ast(q) | Question q <- qs], src=q@\loc);
-		case (Question)`if (<Id i>) {<Question* qs>} else {<Question* qes>}`: 
-			return ifElse(id("<i>", src=i@\loc), [cst2ast(q) | Question q <- qs], [cst2ast(q) | Question q <- qes], src=q@\loc);
+		case (Question)`if (<Expr e>) {<Question* qs>}`: 
+			return ifBlock(cst2ast(e), [cst2ast(q) | Question q <- qs], src=q@\loc);
+		case (Question)`if (<Expr e>) {<Question* qs>} else {<Question* qes>}`: 
+			return ifElse(cst2ast(e), [cst2ast(q) | Question q <- qs], [cst2ast(q) | Question q <- qes], src=q@\loc);
 		default: throw "Unhandled question: <q>";
 	}
 }

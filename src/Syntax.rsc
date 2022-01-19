@@ -14,9 +14,8 @@ start syntax Form
 syntax Question
 	= Str Id ":" Type
 	| Str Id ":" Type "=" Expr
-	| "{" Question* "}"
-	| "if" "(" Id ")" "{" Question* "}"
-	| "if" "(" Id ")" "{" Question* "}" "else" "{" Question* "}";
+	| "if" "(" Expr ")" "{" Question* "}"
+	| "if" "(" Expr ")" "{" Question* "}" "else" "{" Question* "}";
 
 // TODO: +, -, , /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
 // Think about disambiguation using priorities and associativity

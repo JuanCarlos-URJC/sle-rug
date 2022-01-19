@@ -13,8 +13,8 @@ data AForm(loc src = |tmp:///|)
 data AQuestion(loc src = |tmp:///|)
 	= question(str label, AId id, AType typ)
 	| computed(str label, AId id, AType typ, AExpr expr)
-	| ifBlock(AId id, list[AQuestion] questions)
-	| ifElse(AId id, list[AQuestion] questionsIf, list[AQuestion] questionsElse);
+	| ifBlock(AExpr condition, list[AQuestion] questions)
+	| ifElse(AExpr condition, list[AQuestion] questionsIf, list[AQuestion] questionsElse);
 	
 data AExpr(loc src = |tmp:///|)
 	= ref(AId id)
