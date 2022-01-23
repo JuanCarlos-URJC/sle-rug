@@ -29,7 +29,7 @@ import AST;
  */
  
 AForm flatten(AForm f) {
-  return f; 
+	return f; 
 }
 
 /* Rename refactoring:
@@ -39,10 +39,6 @@ AForm flatten(AForm f) {
  *
  */
  
- start[Form] rename(start[Form] f, loc useOrDef, str newName, UseDef useDef) {
-   return f; 
- } 
- 
- 
- 
-
+start[Form] rename(start[Form] f, loc useOrDef, str newName, UseDef useDef) {
+	return f; 
+}

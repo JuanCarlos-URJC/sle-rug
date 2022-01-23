@@ -25,7 +25,7 @@ syntax Expr
 	| Int
 	| Bool
 	| Str
-	> bracket "(" Expr ")"
+	| left bracket "(" Expr ")"
 	> right "!" Expr
 	> left Expr "*" Expr
 	| left Expr "/" Expr
@@ -49,7 +49,7 @@ lexical Str
 	= @category="StringLiteral"  [\"] ![\"]* [\"];
 
 lexical Int
-	= [\-]? [1..9][0..9]+
+	= [\-]? [1-9][0-9]*
 	| [0];
 
 lexical Bool
