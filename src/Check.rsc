@@ -17,8 +17,8 @@ alias TEnv = rel[loc def, str name, str label, Type \type];
 // To avoid recursively traversing the form, use the `visit` construct
 // or deep match (e.g., `for (/question(...) := f) {...}` ) 
 TEnv collect(AForm f){
-	return {<q.src, id.name, label, aType2Type(typ)> | /q:question(str label, AId id, AType typ) := f} +
-		   {<q.src, id.name, label, aType2Type(typ)> | /q:computed(str label, AId id, AType typ, _) := f};
+	return {<id.src, id.name, label, aType2Type(typ)> | /question(str label, AId id, AType typ) := f} +
+		   {<id.src, id.name, label, aType2Type(typ)> | /computed(str label, AId id, AType typ, _) := f};
 }
 
 // - produce an error if there are declared questions with the same name but different types.
