@@ -2,7 +2,10 @@ module Compile
 
 import AST;
 import Resolve;
+import Transform;
+import Boolean;
 import IO;
+import util::Math;
 import lang::html5::DOM; // see standard library
 
 /*
@@ -17,16 +20,134 @@ import lang::html5::DOM; // see standard library
  * - be sure to generate uneditable widgets for computed questions!
  * - if needed, use the name analysis to link uses to definitions
  */
+ 
+
 
 void compile(AForm f) {
-	writeFile(f.src[extension="js"].top, form2js(f));
-	writeFile(f.src[extension="html"].top, toString(form2html(f)));
+
+  writeFile(f.src[extension="js"].top, form2js(f));
+  writeFile(f.src[extension="html"].top, toString(form2html(f)));
 }
 
 HTML5Node form2html(AForm f) {
-	return html();
+  return html(
+    head(title(f.name)),
+    body(
+      
+        form(
+          div(
+           [block(b)|b<-f.questions]
+          )
+          
+        )
+     )
+ );
+}
+HTML5Node block(AQuestion b){
+	switch(b){
+	
+		case ifBlock(AExpr condition, list[AQuestion] questions):
+			return div(h1(
+				label(\for("<toStr(condition)>"), toStr(condition)),
+				h2(
+				[block(q)|q<-b.questions])) ,html5attr("v-if", toStr(condition)));
+
+		case ifElse(AExpr condition, list[AQuestion] questionsIf, list[AQuestion] questionsElse):
+			return 
+			div(h1(
+				label(\for("<toStr(condition)>"), toStr(condition))),
+				h2(
+				[block(q)|q<-b.questionsIf],html5attr("v-if", toStr(condition))),h2(
+				[block(q)|q<-b.questionsElse],html5attr("v-else", toStr(condition))			
+			));
+		case question(str label, AId id, AType typ): return div(h2(question(b)));
+		case computed(str label, AId id, AType typ, AExpr expr): return div(h2(computed(b)));
+	}
+}
+HTML5Node question(AQuestion q){
+	
+		switch(q.typ){
+		
+		case string():
+			return 
+			p(
+				label(\for("<q.id.name>"), q.label),
+				input(\type("text"),name(q.id.name))
+			);
+		
+		case integer():
+			return 
+			p(
+				label(\for("<q.id.name>"), q.label),
+				input(\type("number"),name(q.id.name))
+			);
+	
+		
+		case boolean():
+		
+			return 
+			p(
+				label(\for("<q.id.name>"), q.label),
+				label(\for("True"), "Yes"),
+				input(name("true"), \type("checkbox")),
+				label(\for("Falsee"), "No"),
+				input(name("false"), \type("checkbox"))
+			);		
+	}
+
+}
+HTML5Node computed(AQuestion q){
+	
+		switch(q.typ){
+		
+		case string():
+			return 
+			p(
+				label(\for("<q.id.name>"), q.label),
+				//label(\for("<q.id.name>"), toStr(q.expr)),
+				input(name(q.id.name), readonly("readonly"))
+			);
+		
+		case integer():
+			return 
+			p(
+				label(\for("<q.id.name>"), q.label),
+				//label(\for("<q.id.name>"), toStr(q.expr)),
+				input(name(q.id.name), readonly("readonly"))
+			);
+	
+		
+		case boolean():
+		
+			return 
+			p(
+				label(\for("<q.id.name>"), q.label),
+				//label(\for("<q.id.name>"), toStr(q.expr)),
+				input(name(q.id.name), readonly("readonly"))
+			);		
+	}
+
 }
 
-str form2js(AForm f) {
+str toStr(AExpr e){
+switch(e){
+	case ref(AId id):{return id.name;}
+	case litInt(int n): return toString(n);
+	case litBool(bool b): return toString(b);
+	case litStr(str s): return s;
+	case not(AExpr arg): return ("!"+toStr(arg));
+	case mult(AExpr lhs, AExpr rhs): return(toStr(lhs)+" * "+toStr(rhs));
+	case div(AExpr lhs, AExpr rhs): return(toStr(lhs)+" / "+toStr(rhs));
+	case add(AExpr lhs, AExpr rhs): return(toStr(lhs)+" + "+toStr(rhs));
+	case sub(AExpr lhs, AExpr rhs): return(toStr(lhs)+" - "+toStr(rhs));
+	case gt(AExpr lhs, AExpr rhs): return(toStr(lhs)+" \> "+toStr(rhs));
+	case lt(AExpr lhs, AExpr rhs): return(toStr(lhs)+" \< "+toStr(rhs));
+	case let(AExpr lhs, AExpr rhs): return(toStr(lhs)+" =\< "+toStr(rhs));
+	case get(AExpr lhs, AExpr rhs): return(toStr(lhs)+" =\> "+toStr(rhs));
+	case eq(AExpr lhs, AExpr rhs): return(toStr(lhs)+" == "+toStr(rhs));
+	case dif(AExpr lhs, AExpr rhs): return(toStr(lhs)+" != "+toStr(rhs));
+	case and(AExpr lhs, AExpr rhs): return(toStr(lhs)+" && "+toStr(rhs));
+	case or(AExpr lhs, AExpr rhs): return(toStr(lhs)+" || "+toStr(rhs));
+	};
 	return "";
 }
