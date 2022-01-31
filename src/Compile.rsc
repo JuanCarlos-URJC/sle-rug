@@ -114,7 +114,7 @@ HTML5Node computed(AQuestion q){
 			return 
 			p(
 				label(\for("<q.id.name>"), q.label),
-				label(\for("<q.id.name>"), resolve(q.expr)),
+				//label(\for("<q.id.name>"),toStr(q.expr)),
 				input(name(q.id.name),readonly("readonly"))
 			);
 	
@@ -129,28 +129,6 @@ HTML5Node computed(AQuestion q){
 			);		
 	}
 
-}
-int resolve(AExpr e){
-switch(e){
-	case ref(AId id): return toInt(getElementById(id.name));
-	case litInt(int n): return n;
-	case litBool(bool b): return toString(b);
-	case litStr(str s): return s;
-	case not(AExpr arg): return ("!"+resolve(arg));
-	case mult(AExpr lhs, AExpr rhs): return(resolve(lhs)+" * "+resolve(rhs));
-	case div(AExpr lhs, AExpr rhs): return(toStr(lhs)+" / "+toStr(rhs));
-	case add(AExpr lhs, AExpr rhs): return(toStr(lhs)+" + "+toStr(rhs));
-	case sub(AExpr lhs, AExpr rhs): return(resolve(lhs)+" - "+resolve(rhs));
-	case gt(AExpr lhs, AExpr rhs): return(toStr(lhs)+" \> "+toStr(rhs));
-	case lt(AExpr lhs, AExpr rhs): return(toStr(lhs)+" \< "+toStr(rhs));
-	case let(AExpr lhs, AExpr rhs): return(toStr(lhs)+" =\< "+toStr(rhs));
-	case get(AExpr lhs, AExpr rhs): return(toStr(lhs)+" =\> "+toStr(rhs));
-	case eq(AExpr lhs, AExpr rhs): return(toStr(lhs)+" == "+toStr(rhs));
-	case dif(AExpr lhs, AExpr rhs): return(toStr(lhs)+" != "+toStr(rhs));
-	case and(AExpr lhs, AExpr rhs): return(toStr(lhs)+" && "+toStr(rhs));
-	case or(AExpr lhs, AExpr rhs): return(toStr(lhs)+" || "+toStr(rhs));
-	};
-	return "";
 }
 
 str toStr(AExpr e){
